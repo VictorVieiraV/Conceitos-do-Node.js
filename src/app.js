@@ -47,16 +47,17 @@ app.put("/repositories/:id", (request, response) => {
 
 app.delete("/repositories/:id", (request, response) => {
   const { id } = req.params
-  if (isUuid(id)) {
-    const i = repositories.findIndex(r => r.id === id);
-    if (i < 0) {
-      return res.status(400).json({ Error: 'Repositories not found' })
-    }
-    repositories.splice(i, 1)
-    return res.status(204).send();
-  } else {
-    return res.status(400).json({ error: 'Invalid ID' })
+  const repositoryIndex = repositories.findIndex( 
+    repository => repository.id === id
+  );
+
+  if (repositoryIndex < 0) {
+    return response.status(400).json({ error: 'Repository not found.'})
   }
+
+  repositories.splice(repositoryIndex, 1);
+
+  return response.status(204).send();
 });
 
 app.post("/repositories/:id/like", (request, response) => {
