@@ -67,7 +67,7 @@ app.post("/repositories/:id/like", (request, response) => {
       return response.json(repositories[repositoryIndex])
     }
   } else {
-  return response.status(400).json({ error: 'Invalid ID' })
+  return response.status(400).json({ error: 'Repository Not Found' })
 }
 });
 
