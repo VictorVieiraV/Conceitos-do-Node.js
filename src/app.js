@@ -14,8 +14,7 @@ app.get("/repositories", (request, response) => {
 });
 
 app.post("/repositories", (request, response) => {
-  const {title, url, techs } = request.body;
-  
+  const { title, url, techs } = request.body
   const repository = {
     id: uuid(),
     title: title,
@@ -23,9 +22,8 @@ app.post("/repositories", (request, response) => {
     techs: techs,
     likes: 0
   }
-  repositories.push(repository);
-
-  return response.json(repository);
+  repositories.push(repository)
+  return response.json(repository)
 });
 
 app.put("/repositories/:id", (request, response) => {
@@ -45,19 +43,18 @@ app.put("/repositories/:id", (request, response) => {
   }
 });
 
-app.delete("/repositories/:id", (request, response) => {
+app.delete("/repositories/:id", (req, res) => {
   const { id } = req.params
-  const repositoryIndex = repositories.findIndex( 
-    repository => repository.id === id
-  );
-
-  if (repositoryIndex < 0) {
-    return response.status(400).json({ error: 'Repository not found.'})
+  if (isUuid(id)) {
+    const i = repositories.findIndex(r => r.id === id);
+    if (i < 0) {
+      return res.status(400).json({ Error: 'Repositories not found' })
+    }
+    repositories.splice(i, 1)
+    return res.status(204).send();
+  } else {
+    return res.status(400).json({ error: 'Invalid ID' })
   }
-
-  repositories.splice(repositoryIndex, 1);
-
-  return response.status(204).send();
 });
 
 app.post("/repositories/:id/like", (request, response) => {
@@ -73,6 +70,5 @@ app.post("/repositories/:id/like", (request, response) => {
     return response.status(400).json({ error: 'Invalid ID' })
   }
 });
-
 
 module.exports = app;
